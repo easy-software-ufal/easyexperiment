@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Fluxo da tarefa{% endblock %}
+
+{% block content %}
+<h1>Por favor informe o seu nome e email:</h1>
+
+<form action="{% url 'experiments:create_participant' flow_number %}" method="post">
+    {% csrf_token %}
+    <label for="name">Nome: </label><br />
+    <input type="text" name="name" id="name" /><br><br>
+
+    <label for="name">Email: </label><br />
+    <input type="text" name="email" id="email" /><br><br>
+  
+    <input type="submit" value="Iniciar Tarefa" />
+</form>
+
+{% endblock %}

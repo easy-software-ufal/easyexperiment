@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Fluxo da tarefa{% endblock %}
+
+{% block content %}
+<h1>Escolha o fluxo que será executado pelo participante</h1>
+
+
+<ul>
+    <li><a href="{% url 'experiments:start_flow' 1 %}">Fluxo 1</a></li>
+    <li><a href="{% url 'experiments:start_flow' 2 %}">Fluxo 2</a></li>
+</ul>
+{% endblock %}
