@@ -1,5 +1,14 @@
 {% load static %}
 
-<img src="{% static "experiments/flow1_task1.png" %}" alt="My image" width="1400"><br><br><br><br>
+<img src="{% static "experiments/flow1_task1.png" %}" alt="My image" width="1200"><br><br><br><br>
 
-<a href="{% url 'experiments:second_task' participant_id flow_number %}">Próxima Tarefa</a>
+<a id="next_page" href="{% url 'experiments:second_task' participant_id flow_number %}" style="display: none">Próxima Tarefa</a>
+
+
+<script type="text/javascript">
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+        document.getElementById("next_page").click()
+    }
+}
+</script>

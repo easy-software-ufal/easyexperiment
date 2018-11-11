@@ -13,6 +13,8 @@ class Participant(models.Model):
     task1_end = models.DateTimeField(null=True, blank=True)
     task2_start = models.DateTimeField(null=True, blank=True)
     task2_end = models.DateTimeField(null=True, blank=True)
+    task1_data = models.TextField(null=True, blank=True)
+    task2_data = models.TextField(null=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name

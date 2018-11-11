@@ -2,33 +2,16 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
-    <style type="text/css">
-        li {
-            text-decoration: none;
-            float: left;
-            display: inline-block;
-        }
-        a:link, a:visited {
-            background-color: #f44336;
-            color: white;
-            padding: 14px 25px;
-            text-align: center; 
-            text-decoration: none;
-            display: inline-block;
-            font-weight: bold;
-            margin: 10px;
-            border-radius: 25px;
-            padding: 20px; 
-            width: 200px;
-        }
-
-        a:hover, a:active {
-            font-weight: bold;
-            background-color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+        
+        
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

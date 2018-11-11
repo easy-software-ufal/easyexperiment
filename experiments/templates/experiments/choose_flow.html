@@ -3,11 +3,13 @@
 {% block title %}Fluxo da tarefa{% endblock %}
 
 {% block content %}
-<h1>Escolha o fluxo que será executado pelo participante</h1>
 
+<h1 style="text-align: center">Escolha o fluxo que será executado pelo participante</h1>
+<hr>
 
-<ul>
-    <li><a href="{% url 'experiments:start_flow' 1 %}">Fluxo 1</a></li>
-    <li><a href="{% url 'experiments:start_flow' 2 %}">Fluxo 2</a></li>
-</ul>
+<div style="text-align: center">
+    <a href="{% url 'experiments:start_flow' 1 %}" class="btn btn-lg btn-primary">Fluxo 1</a>
+    <a href="{% url 'experiments:start_flow' 2 %}" class="btn btn-lg btn-success">Fluxo 2</a>
+</div>
+
 {% endblock %}

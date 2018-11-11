@@ -18,14 +18,30 @@ def create_participant(request, flow_number):
     email = request.POST.get('email')
     participant = Participant.objects.create(name = name, email = email, flow = flow_number, start_datetime = datetime.now(), task1_start = datetime.now())
 
+    clear_gaze_data_file()
+
     context = { 'participant_id': participant.id, 'flow_number': flow_number}
     return render(request, "experiments/flow%s_task1.html" % flow_number, context)
 
 def second_task(request, participant_id, flow_number):
-    Participant.objects.filter(pk=participant_id).update(task1_end = datetime.now(), task2_start = datetime.now())
+    data = read_gaze_data_file()
+    Participant.objects.filter(pk=participant_id).update(task1_end = datetime.now(), task1_data = data, task2_start = datetime.now())
+    clear_gaze_data_file()
     context = { 'participant_id': participant_id, 'flow_number': flow_number}
     return render(request, "experiments/flow%s_task2.html" % flow_number, context)
 
 def finish(request, participant_id):
-    Participant.objects.filter(pk=participant_id).update(end_datetime=datetime.now(), task2_end = datetime.now())
+    data = read_gaze_data_file()
+    Participant.objects.filter(pk=participant_id).update(end_datetime=datetime.now(), task2_end = datetime.now(), task2_data = data)
+    clear_gaze_data_file()
     return render(request, "experiments/finish.html")
+
+
+GAZE_DATA_FILE = 'c:\\users\\nando\\desktop\\gaze_data.txt'
+# utils
+def clear_gaze_data_file():
+    open(GAZE_DATA_FILE, 'w').close()
+
+def read_gaze_data_file():
+    with open(GAZE_DATA_FILE, 'r') as filehandle:  
+        return filehandle.readlines()
