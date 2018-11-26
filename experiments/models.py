@@ -18,3 +18,8 @@ class Participant(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class Point(models.Model):
+    x = models.CharField(max_length=200)
+    y = models.CharField(max_length=200)
+    datetime = models.DateTimeField(null=True, blank=True)
