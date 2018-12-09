@@ -4,7 +4,7 @@ import psycopg2
 from datetime import datetime, timedelta
 import numpy as np
 
-GAZE_DATA_FILE = 'c:\\users\\nando\\desktop\\gaze_data.txt'
+GAZE_DATA_FILE = 'c:\\users\\Rodrigo\\desktop\\gaze_data.txt'
 # utils
 def clear_gaze_data_file():
     open(GAZE_DATA_FILE, 'w').close()
