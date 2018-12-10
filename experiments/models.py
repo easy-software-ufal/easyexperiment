@@ -30,6 +30,9 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __unicode__(self):
+        return self.description
+
 class Execution(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True)
