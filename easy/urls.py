@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from experiments.views.choose_experiment import ExperimentList
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', ExperimentList.as_view(), name='home'),
     url(r'^experiments/', include('experiments.urls', namespace="experiments")),
 ]
