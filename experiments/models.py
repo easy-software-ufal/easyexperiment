@@ -6,6 +6,7 @@ from django.db import models
 
 class Experiment(models.Model):
     description = models.CharField(max_length=200)
+    tasks_quantity_by_cell = models.IntegerField(default=1, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -69,6 +70,7 @@ class LatinSquareCell(models.Model):
 class LatinSquareRow(models.Model):
     cell1 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True, related_name='first_cell')
     cell2 =  models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True, related_name='second_cell')
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True, related_name='row_participant')
 
     def __unicode__(self):
             return "%d" % self.id
@@ -77,7 +79,6 @@ class LatinSquare(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
     row1 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='first_row')
     row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='second_row')
-    tasks_quantity_by_cell = models.IntegerField(default=1, blank=True, null=True)
 
     def __unicode__(self):
         return "%d" % self.id

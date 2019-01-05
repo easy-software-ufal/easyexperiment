@@ -57,9 +57,9 @@ class PointAdmin(admin.ModelAdmin):
     list_filter = ('datetime',)
 
 class LatinSquareAdmin(admin.ModelAdmin):
-    list_filter = ('experiment', 'tasks_quantity_by_cell', 'row1', 'row2',)
+    list_filter = ('experiment', 'row1', 'row2',)
     readonly_fields = ('row1', 'row2',)
-    list_display = ('id', 'experiment', 'tasks_quantity_by_cell',)
+    list_display = ('id', 'experiment',)
 
 admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(Participant, ParticipantAdmin)

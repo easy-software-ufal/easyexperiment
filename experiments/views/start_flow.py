@@ -1,7 +1,25 @@
 # -*- coding: utf-8 -*-
-from django.views.generic.list import View
-from experiments.models import Experiment
+"""First screen of experiment flow"""
 
-class ExperimentList(View):
-    model = Experiment
-    paginate_by = 100
+from django.http import HttpResponse
+from django.views.generic.edit import FormView
+from experiments.forms import ParticipantForm
+
+class StartFlow(FormView):
+    template_name = 'start_flow.html'
+    form_class = ParticipantForm
+    success_url = '/first-task/'
+
+    def get_initial(self):
+        """
+        Returns the initial data to use for forms on this view.
+        """
+        initial = super(StartFlow, self).get_initial()
+
+        initial['experiment_id'] = self.kwargs['experiment_id']
+
+        return initial
+
+    def form_valid(self, form):
+        form.save_participant()
+        return super(StartFlow, self).form_valid(form)

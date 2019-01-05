@@ -1,7 +1,10 @@
 <h1>Experiments</h1>
 <ul>
 {% for experiment in object_list %}
-    <li><a href="#">{{ experiment.created_at }} - {{ experiment.description }}</a></li>
+    <li>
+        <a href="{% url 'experiments:start_flow' experiment.id %}">{{ experiment.created_at }} - {{ experiment.description }}
+        </a>
+    </li>
 {% empty %}
     <li>No experiments yet.</li>
 {% endfor %}
