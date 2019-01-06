@@ -3,7 +3,7 @@
 # pylint: disable=no-member
 """Search LatinSquare Row available"""
 from django.db.models import Q
-from experiments.models import LatinSquare
+from experiments.models import Task
 
 
 class NextTask(object):
@@ -48,7 +48,11 @@ class NextTask(object):
 
     def __task(self):
         try:
-            return Task.objects.raw(self.SQL % (participant.id, experiment.id, participant.id, experiment.id, participant.id,))[0]
+            return Task.objects.raw(self.SQL % (self.participant.id,
+                                                self.experiment.id,
+                                                self.participant.id,
+                                                self.experiment.id,
+                                                self.participant.id,))[0]
         except IndexError:
             # Return None if the query result is empty
             return None
