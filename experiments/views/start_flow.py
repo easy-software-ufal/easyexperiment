@@ -8,7 +8,7 @@ from experiments.forms import ParticipantForm
 class StartFlow(FormView):
     template_name = 'start_flow.html'
     form_class = ParticipantForm
-    success_url = '/first-task/'
+    success_url = '/experiments/next-task/'
 
     def get_initial(self):
         """

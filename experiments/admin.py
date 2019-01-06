@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.utils.html import format_html
+
 from experiments.models import Participant, Experiment, Task, Execution, Point, LatinSquare, LatinSquareRow
 
 class TaskInline(admin.TabularInline):

@@ -22,11 +22,6 @@ class Participant(models.Model):
     def __unicode__(self):
         return self.name
 
-
-def task_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/uploads/task_<id>/<filename>
-    return 'uploads/task_{0}/{1}'.format(instance.id, filename)
-
 class Task(models.Model):
     COMMON = 1
     SPECIAL = 2
@@ -36,7 +31,7 @@ class Task(models.Model):
     )
 
     description = models.CharField(max_length=200)
-    image = models.FileField(upload_to=task_directory_path)
+    image = models.ImageField(upload_to = 'uploads/tasks')
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
     kind = models.IntegerField(choices=KIND_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
