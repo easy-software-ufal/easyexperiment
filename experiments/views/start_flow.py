@@ -21,5 +21,16 @@ class StartFlow(FormView):
         return initial
 
     def form_valid(self, form):
-        form.save_participant()
+        participant = form.save_participant()
+        experiment  = self.__experiment_from_participant(participant)
+        self.success_url += '%d/%d/' % (participant.id, experiment.id)
         return super(StartFlow, self).form_valid(form)
+
+
+    def __experiment_from_participant(self, participant):
+        latin_square = participant.row_participant.first().row1_latin_square.first()
+
+        if latin_square is None:
+            latin_square = participant.row_participant.first().row2_latin_square.first()
+
+        return latin_square.experiment

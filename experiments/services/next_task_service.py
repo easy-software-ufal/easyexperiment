@@ -6,7 +6,7 @@ from django.db.models import Q
 from experiments.models import Task
 
 
-class NextTask(object):
+class NextTaskService(object):
     """Search the next task for a participant at an experiment"""
 
     SQL = """

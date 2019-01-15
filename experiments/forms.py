@@ -16,7 +16,7 @@ class ParticipantForm(forms.Form):
         experiment_id = self.cleaned_data['experiment_id']
         experiment    = self.__experiment(experiment_id)
 
-        participant = Participant.objects.create(name = name, email = email)
+        participant = Participant.objects.create(name=name, email=email)
 
         latin_square_row = SearchAvailableLatinSquareRow(experiment).call()
 

@@ -24,7 +24,8 @@ class SearchAvailableLatinSquareRow(object):
         self.experiment = experiment
 
     def call(self):
-        latin_square = LatinSquare.objects.raw(self.SQL % self.experiment.id)[0]
+        latin_square = LatinSquare.objects.raw(self.SQL % self.experiment.id)
+        latin_square = latin_square[0] if len(list(latin_square)) > 0 else None
 
         if latin_square is not None:
             return latin_square.row1 if latin_square.row1.participant is None else latin_square.row2

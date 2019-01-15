@@ -72,8 +72,8 @@ class LatinSquareRow(models.Model):
 
 class LatinSquare(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
-    row1 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='first_row')
-    row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='second_row')
+    row1 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='row1_latin_square')
+    row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='row2_latin_square')
 
     def __unicode__(self):
         return "%d" % self.id
