@@ -15,15 +15,16 @@ class NextTask(TemplateView):
         experiment = self.__get_experiment(kwargs['experiment_id'])
         participant = self.__get_participant(kwargs['participant_id'])
 
-        if 'execution_id' in kwargs:
-            execution = Execution.objects.get(pk=kwargs['execution_id'])
-            execution.update(end = datetime.now())
+        if 'previous_execution_id' in self.request.GET:
+            execution = Execution.objects.get(pk=self.request.GET.get('previous_execution_id'))
+            execution.end = datetime.now()
+            execution.save()
 
         task = NextTaskService(experiment, participant).call()
 
         if task is None:
             # TODO: create an 'end' view and substitute here
-            return HttpResponseRedirect('/end')
+            return HttpResponseRedirect('/experiments/finish-execution/')
 
         self.__create_execution(participant, task)
 
@@ -37,6 +38,8 @@ class NextTask(TemplateView):
         experiment = self.__get_experiment(self.kwargs['experiment_id'])
         participant = self.__get_participant(self.kwargs['participant_id'])
 
+        context['experiment_id'] = experiment.id
+        context['participant_id'] = participant.id
         context['execution'] = self.execution
 
         return context
