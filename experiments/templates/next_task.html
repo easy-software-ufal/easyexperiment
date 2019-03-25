@@ -25,12 +25,64 @@
         <input type="hidden" value="{{execution.id}}" name="previous_execution_id" />
         <button class="hide" id="next_task_button">
     </form>
+
     <script type="text/javascript">
-    document.body.onkeyup = function(e){
-        if(e.keyCode == 32){
-            document.getElementById("next_task_button").click()
+        var state = 'running';
+
+        document.body.onkeyup = function(e){
+            if(e.ctrlKey) {
+                if(e.keyCode == 78){
+                    // Ctrl + n => next task
+                    document.getElementById("next_task_button").click()
+                } else if(e.keyCode == 80) {
+                    // Ctrl + p => pause
+                    if (state == 'running') {
+                        alert('paused');
+                        state = 'paused';
+                        debugger
+                        pauseExecution();
+                    }
+                } else if(e.keyCode == 82) {
+                    // Ctrl + r => resume
+                    if (state == 'paused') {
+                        alert('resume');
+                        state = 'running';
+                    }
+                } else if(e.keyCode == 69) {
+                    // Ctrl + e => increment_error
+                    if (state == 'running') {
+                        alert('error');
+                    }
+                }
+            }
+
         }
-    }
+
+        function postAjax(url, data, success) {
+            var params = typeof data == 'string' ? data : Object.keys(data).map(
+                    function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+                ).join('&');
+
+            var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xhr.open('POST', url);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
+            };
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(params);
+            return xhr;
+        }
+
+        function pauseExecution() {
+            postAjax(
+                "{% url 'experiments:pause_execution' execution.id %}",
+                'csrfmiddlewaretoken={{ csrf_token }}',
+                function(data) {
+                    console.log(data);
+                }
+            );
+        }
     </script>
 </body>
 </html>

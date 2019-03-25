@@ -68,7 +68,7 @@ class LatinSquareRow(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True, related_name='row_participant')
 
     def __unicode__(self):
-            return "%d" % self.id
+        return "%d" % self.id
 
 class LatinSquare(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
@@ -78,6 +78,10 @@ class LatinSquare(models.Model):
     def __unicode__(self):
         return "%d" % self.id
 
+class Pause(models.Model):
+    execution = models.ForeignKey(Execution, on_delete=models.CASCADE, blank=True, null=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
 
 # from django.db.models.signals import post_save
 from experiments.signals import handlers

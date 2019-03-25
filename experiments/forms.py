@@ -6,8 +6,8 @@ from experiments.models import Experiment, LatinSquare, Participant
 from experiments.services.search_available_latin_square_row import SearchAvailableLatinSquareRow
 
 class ParticipantForm(forms.Form):
-    name = forms.CharField()
-    email = forms.EmailField(help_text='A valid email address, please.')
+    name = forms.CharField(required = False)
+    email = forms.EmailField(help_text='A valid email address, please.', required = False)
     experiment_id = forms.IntegerField(widget = forms.HiddenInput(), required = True)
 
     def save_participant(self):
