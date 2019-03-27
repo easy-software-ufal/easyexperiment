@@ -37,16 +37,14 @@
                 } else if(e.keyCode == 80) {
                     // Ctrl + p => pause
                     if (state == 'running') {
-                        alert('paused');
                         state = 'paused';
-                        debugger
                         pauseExecution();
                     }
                 } else if(e.keyCode == 82) {
                     // Ctrl + r => resume
                     if (state == 'paused') {
-                        alert('resume');
                         state = 'running';
+                        resumeExecution();
                     }
                 } else if(e.keyCode == 69) {
                     // Ctrl + e => increment_error
@@ -77,6 +75,16 @@
         function pauseExecution() {
             postAjax(
                 "{% url 'experiments:pause_execution' execution.id %}",
+                'csrfmiddlewaretoken={{ csrf_token }}',
+                function(data) {
+                    console.log(data);
+                }
+            );
+        }
+
+        function resumeExecution() {
+            postAjax(
+                "{% url 'experiments:resume_execution' execution.id %}",
                 'csrfmiddlewaretoken={{ csrf_token }}',
                 function(data) {
                     console.log(data);

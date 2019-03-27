@@ -83,6 +83,11 @@ class Pause(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
 
+    def duration_in_seconds(self):
+        duration = self.end_time - self.start_time
+
+        return duration.total_seconds()
+
 # from django.db.models.signals import post_save
 from experiments.signals import handlers
 
