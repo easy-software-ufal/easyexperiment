@@ -31,6 +31,7 @@
 
         document.body.onkeyup = function(e){
             if(e.ctrlKey) {
+                console.log(state);
                 if(e.keyCode == 78){
                     // Ctrl + n => next task
                     document.getElementById("next_task_button").click()
@@ -49,7 +50,7 @@
                 } else if(e.keyCode == 69) {
                     // Ctrl + e => increment_error
                     if (state == 'running') {
-                        alert('error');
+                        incrementNumberOfErrors();
                     }
                 }
             }
@@ -85,6 +86,16 @@
         function resumeExecution() {
             postAjax(
                 "{% url 'experiments:resume_execution' execution.id %}",
+                'csrfmiddlewaretoken={{ csrf_token }}',
+                function(data) {
+                    console.log(data);
+                }
+            );
+        }
+
+        function incrementNumberOfErrors() {
+            postAjax(
+                "{% url 'experiments:increment_number_of_errors' execution.id %}",
                 'csrfmiddlewaretoken={{ csrf_token }}',
                 function(data) {
                     console.log(data);
