@@ -1,40 +1,29 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 
-from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 
-from experiments.models import Participant, Experiment, Execution, Task
-from experiments.services.next_task_service import NextTaskService
+from experiments.models import Participant, Experiment
 
 
-class NextTask(TemplateView):
+class PreviousTask(TemplateView):
     template_name = 'next_task.html'
 
+    def __init__(self, **kwargs):
+        super(PreviousTask, self).__init__(**kwargs)
+        self.execution = None
+
     def get(self, request, *args, **kwargs):
-        experiment = self.__get_experiment(kwargs['experiment_id'])
         participant = self.__get_participant(kwargs['participant_id'])
 
         participant.finish_all_pauses()
 
-        if 'previous_execution_id' in self.request.GET:
-            execution = Execution.objects.get(pk=self.request.GET.get('previous_execution_id'))
-            execution.end = datetime.now()
-            execution.save()
+        self.execution = participant.execution_set.all().latest('created_at')
 
-        task = NextTaskService(experiment, participant).call()
-
-        if task is None:
-            # TODO: create an 'end' view and substitute here
-            return HttpResponseRedirect('/experiments/finish-execution/')
-
-        self.__create_execution(participant, task)
-
-        return super(NextTask, self).get(request, args, kwargs)
+        return super(PreviousTask, self).get(request, args, kwargs)
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
-        context = super(NextTask, self).get_context_data(**kwargs)
+        context = super(PreviousTask, self).get_context_data(**kwargs)
 
         # load experiment and participant
         experiment = self.__get_experiment(self.kwargs['experiment_id'])
@@ -57,6 +46,3 @@ class NextTask(TemplateView):
             self.participant = Participant.objects.get(pk=participant_id)
 
         return self.participant
-
-    def __create_execution(self, participant, task):
-        self.execution = Execution.objects.create(participant = participant, task = task, start = datetime.now())

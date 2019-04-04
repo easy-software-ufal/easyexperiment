@@ -29,7 +29,10 @@
     <script type="text/javascript">
         var state = 'running';
 
-        document.body.onkeyup = function(e){
+        document.body.addEventListener("click", function(evt) {
+            window.location.href = "/experiments/pause-execution/{{ execution.id }}/";
+        });
+        /*document.body.onkeyup = function(e){
             if(e.ctrlKey) {
                 console.log(state);
                 if(e.keyCode == 78){
@@ -55,53 +58,7 @@
                 }
             }
 
-        }
-
-        function postAjax(url, data, success) {
-            var params = typeof data == 'string' ? data : Object.keys(data).map(
-                    function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
-                ).join('&');
-
-            var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-            xhr.open('POST', url);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
-            };
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(params);
-            return xhr;
-        }
-
-        function pauseExecution() {
-            postAjax(
-                "{% url 'experiments:pause_execution' execution.id %}",
-                'csrfmiddlewaretoken={{ csrf_token }}',
-                function(data) {
-                    console.log(data);
-                }
-            );
-        }
-
-        function resumeExecution() {
-            postAjax(
-                "{% url 'experiments:resume_execution' execution.id %}",
-                'csrfmiddlewaretoken={{ csrf_token }}',
-                function(data) {
-                    console.log(data);
-                }
-            );
-        }
-
-        function incrementNumberOfErrors() {
-            postAjax(
-                "{% url 'experiments:increment_number_of_errors' execution.id %}",
-                'csrfmiddlewaretoken={{ csrf_token }}',
-                function(data) {
-                    console.log(data);
-                }
-            );
-        }
+        }*/
     </script>
 </body>
 </html>

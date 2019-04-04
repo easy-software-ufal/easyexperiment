@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Tarefa Pausada{% endblock %}
+
+{% block content %}
+    <h1>Tarefa Pausada</h1>
+    <div>
+        <a id="navigationButton" href="{% url 'experiments:previous_task' pause.execution.participant.id pause.execution.task.experiment.id %}"
+           class="btn btn-primary">Voltar para a tarefa</a>
+        <button id="responseButton" href="#" class="btn btn-default" data-toggle="modal" data-target="#answerModal">Responder</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Qual a sua resposta?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea name="response" id="task_response" cols="30" rows="10"
+                                  class="form-control"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="submit_response">Submeter Resposta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(function () {
+            $("#submit_response").on("click", function (event) {
+                event.preventDefault();
+                submitResponse();
+            });
+        });
+
+        function submitResponse() {
+            var userAnswer = $("#task_response").val();
+            sendAjax(
+                "POST",
+                "{% url 'experiments:submit_answer' pause.execution.id %}",
+                'csrfmiddlewaretoken={{ csrf_token }}&answer=' + userAnswer,
+                function (data) {
+                    $("#submit_response").val('');
+                    $("#answerModal").modal('hide');
+
+                    var result = JSON.parse(data);
+
+                    if (result.correct) {
+                        alert('Resposta correta!');
+                        changeNavigationButtonToNextTask();
+                        hideResponseButton();
+                    } else {
+                        alert('Resposta incorreta!')
+                        $("#responseButton").html("Tentar Novamente");
+                    }
+                }
+            );
+        }
+
+        function changeNavigationButtonToNextTask() {
+            var navigationButton = $("#navigationButton");
+            $(navigationButton).html('Ir para a próxima tarefa');
+            $(navigationButton).attr('href', "{% url 'experiments:next_task' pause.execution.participant.id pause.execution.task.experiment.id %}?previous_execution_id={{ pause.execution.id }}");
+        }
+
+        function hideResponseButton() {
+            $("#responseButton").hide();
+        }
+    </script>
+{% endblock %}

@@ -2,7 +2,6 @@
 # pylint: disable=too-few-public-methods
 # pylint: disable=no-member
 """Search LatinSquare Row available"""
-from django.db.models import Q
 from experiments.models import LatinSquare
 
 

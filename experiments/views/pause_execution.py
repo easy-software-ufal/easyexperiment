@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from django.forms.models import model_to_dict
-from django.views.generic import View
-from django.http import HttpResponse
-from experiments.models import Pause
-import json
+
+from django.views.generic import TemplateView
+
+from experiments.models import Pause, Execution
+
 
 def date_handler(obj):
     if hasattr(obj, 'isoformat'):
@@ -12,14 +12,28 @@ def date_handler(obj):
     else:
         raise TypeError
 
-class PauseExecution(View):
-    template_name= None
-    def post(self, request, *args, **kwargs):
-        pause = self.create_pause(int(kwargs['execution_id']))
-        response_kwargs = { 'content_type': 'application/json' }
-        # import code; code.interact(local=dict(globals(), **locals()))
-        pause.refresh_from_db()
-        return HttpResponse(json.dumps(model_to_dict(pause), default=date_handler), **response_kwargs)
+
+class PauseExecution(TemplateView):
+    template_name = 'pause_execution.html'
+
+    def get(self, request, *args, **kwargs):
+        # finish previous pauses, this is needed in case of user refresh the screen
+        execution = Execution.objects.get(pk=kwargs['execution_id'])
+        execution.participant.finish_all_pauses()
+
+        return super(PauseExecution, self).get(request, args, kwargs)
 
     def create_pause(self, execution_id):
         return Pause.objects.create(execution_id=execution_id, start_time=datetime.now())
+
+    def get_context_data(self):
+        # Call the base implementation
+        context = super(PauseExecution, self).get_context_data()
+        # import code;
+        # code.interact(local=dict(globals(), **locals()))
+
+        pause = self.create_pause(int(self.kwargs['execution_id']))
+
+        context['pause'] = pause
+
+        return context

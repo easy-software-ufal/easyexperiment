@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from django.db import models
 
 
@@ -13,14 +15,20 @@ class Experiment(models.Model):
     def __unicode__(self):
         return self.description
 
+
 class Participant(models.Model):
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def finish_all_pauses(self):
+        for execution in self.execution_set.all():
+            execution.pause_set.all().update(end_time=datetime.now())
+
     def __unicode__(self):
         return self.name
+
 
 class Task(models.Model):
     COMMON = 1
@@ -31,14 +39,16 @@ class Task(models.Model):
     )
 
     description = models.CharField(max_length=200)
-    image = models.ImageField(upload_to = 'uploads/tasks')
+    image = models.ImageField(upload_to='uploads/tasks')
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
     kind = models.IntegerField(choices=KIND_CHOICES, blank=True, null=True)
+    correct_answer = models.CharField(max_length=500, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.description
+
 
 class Execution(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True)
@@ -48,6 +58,15 @@ class Execution(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     number_of_errors = models.IntegerField(default=0)
+
+    def duration_in_seconds(self):
+        pauses_duration = 0
+        for pause in self.pause_set.all():
+            pauses_duration += pause.duration_in_seconds()
+
+        execution_total_duration = self.end - self.start
+
+        return execution_total_duration.total_seconds() - pauses_duration
 
 
 class Point(models.Model):
@@ -64,20 +83,27 @@ class LatinSquareCell(models.Model):
 
 
 class LatinSquareRow(models.Model):
-    cell1 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True, related_name='first_cell')
-    cell2 =  models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True, related_name='second_cell')
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True, related_name='row_participant')
+    cell1 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True,
+                              related_name='first_cell')
+    cell2 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True,
+                              related_name='second_cell')
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True,
+                                    related_name='row_participant')
 
     def __unicode__(self):
         return "%d" % self.id
+
 
 class LatinSquare(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
-    row1 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='row1_latin_square')
-    row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True, related_name='row2_latin_square')
+    row1 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
+                             related_name='row1_latin_square')
+    row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
+                             related_name='row2_latin_square')
 
     def __unicode__(self):
         return "%d" % self.id
+
 
 class Pause(models.Model):
     execution = models.ForeignKey(Execution, on_delete=models.CASCADE, blank=True, null=True)
@@ -89,7 +115,13 @@ class Pause(models.Model):
 
         return duration.total_seconds()
 
-# from django.db.models.signals import post_save
-from experiments.signals import handlers
 
+class Answer(models.Model):
+    execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=500)
+    correct = models.BooleanField()
+
+
+# from django.db.models.signals import post_save
+#
 # post_save.connect(handlers.my_handler, sender=LatinSquare)
