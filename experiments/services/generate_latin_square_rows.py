@@ -19,21 +19,21 @@ class GenerateLatinSquareRows(object):
     def __random_tasks_by_kind(self, kind):
         """Get tasks randomly based on task lind"""
         return Task.objects\
-                   .filter(kind=kind)\
-                   .exclude(id__in=self.__tasks_to_exclude())\
-                   .order_by('?')[:self.latin_square.experiment.tasks_quantity_by_cell]
+            .filter(kind=kind, experiment_id=self.latin_square.experiment.id)\
+            .exclude(id__in=self.__tasks_to_exclude())\
+            .order_by('?')[:self.latin_square.experiment.tasks_quantity_by_cell]
 
     def __create_rows(self):
         """Create rows for current latin square"""
         first_row_cells = self.__create_cells()
         self.latin_square.row1 = LatinSquareRow.objects\
-                                               .create(cell1=first_row_cells['common_cell'],
-                                                       cell2=first_row_cells['special_cell'])
+            .create(cell1=first_row_cells['common_cell'],
+                    cell2=first_row_cells['special_cell'])
 
         second_row_cells = self.__create_cells()
         self.latin_square.row2 = LatinSquareRow.objects\
-                                               .create(cell1=second_row_cells['special_cell'],
-                                                       cell2=second_row_cells['common_cell'])
+            .create(cell1=second_row_cells['special_cell'],
+                    cell2=second_row_cells['common_cell'])
 
         self.latin_square.save()
 

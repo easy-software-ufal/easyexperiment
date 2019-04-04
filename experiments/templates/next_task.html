@@ -1,38 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Run Task</title>
-    <style type="text/css">
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        .imgbox {
-            display: grid;
-            height: 100%;
-        }
-        .center-fit {
-            max-width: 100%;
-            max-height: 100vh;
-            margin: auto;
-        }
-    </style>
-</head>
-<body>
-    <img class="center-fit" src="{{ execution.task.image.url }}" alt="Image not found" />
+    <head>
+        <title>Run Task</title>
+        <style type="text/css">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .imgbox {
+                display: grid;
+                height: 100%;
+            }
+            .center-fit {
+                max-width: 100%;
+                max-height: 100vh;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <img class="center-fit" src="{{ execution.task.image.url }}" alt="Image not found" />
 
-    <form action="/experiments/next-task/{{participant_id}}/{{experiment_id}}/" method="get">
-        <input type="hidden" value="{{execution.id}}" name="previous_execution_id" />
-        <button class="hide" id="next_task_button">
-    </form>
+        <form action="/experiments/next-task/{{participant_id}}/{{experiment_id}}/" method="get">
+            <input type="hidden" value="{{execution.id}}" name="previous_execution_id" />
+            <button class="hide" id="next_task_button">
+        </form>
 
-    <script type="text/javascript">
-        var state = 'running';
 
-        document.body.addEventListener("click", function(evt) {
-            window.location.href = "/experiments/pause-execution/{{ execution.id }}/";
-        });
-        /*document.body.onkeyup = function(e){
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            var state = 'running';
+
+            $(function() {
+                $('*').on('click', function(event) {
+                    event.preventDefault();
+                    window.location.href = "/experiments/pause-execution/{{ execution.id }}/";
+                });
+            });
+
+            /*document.body.onkeyup = function(e){
             if(e.ctrlKey) {
                 console.log(state);
                 if(e.keyCode == 78){
@@ -59,7 +68,7 @@
             }
 
         }*/
-    </script>
-</body>
+        </script>
+    </body>
 </html>
 
