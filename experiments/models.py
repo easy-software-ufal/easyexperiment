@@ -3,7 +3,10 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
+
+from experiments.managers.latin_square_manager import LatinSquareManager
 
 
 class Experiment(models.Model):
@@ -31,17 +34,22 @@ class Participant(models.Model):
 
 
 class Task(models.Model):
-    COMMON = 1
-    SPECIAL = 2
-    KIND_CHOICES = (
-        (COMMON, 'Common'),
-        (SPECIAL, 'Special'),
+    FIRST_FRAME = 1
+    SECOND_FRAME = 2
+    THIRD_FRAME = 3
+    FOURTH_FRAME = 4
+
+    FRAME_CHOICES = (
+        (FIRST_FRAME, 'Primeiro Quadrante'),
+        (SECOND_FRAME, 'Segundo Quadrante'),
+        (THIRD_FRAME, 'Terceiro Quadrante'),
+        (FOURTH_FRAME, 'Quarto Quadrante'),
     )
 
     description = models.CharField(max_length=200)
     image = models.ImageField(upload_to='uploads/tasks')
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
-    kind = models.IntegerField(choices=KIND_CHOICES, blank=True, null=True)
+    frame = models.IntegerField(choices=FRAME_CHOICES, blank=True, null=True)
     correct_answer = models.CharField(max_length=500, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -100,6 +108,9 @@ class LatinSquare(models.Model):
                              related_name='row1_latin_square')
     row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
                              related_name='row2_latin_square')
+    frame_sequence = ArrayField(models.IntegerField(), null=True, blank=True, default=[1, 2, 3, 4])
+
+    objects = LatinSquareManager()
 
     def __unicode__(self):
         return "%d" % self.id
@@ -115,12 +126,14 @@ class Pause(models.Model):
 
         return duration.total_seconds()
 
+    def __unicode__(self):
+        return "%d %d" % (self.id, self.duration_in_seconds())
+
 
 class Answer(models.Model):
     execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
     answer = models.CharField(max_length=500)
     correct = models.BooleanField()
-
 
 # from django.db.models.signals import post_save
 #

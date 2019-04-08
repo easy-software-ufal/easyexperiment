@@ -26,8 +26,7 @@ class ParticipantForm(forms.Form):
             latin_square_row.participant = participant
             latin_square_row.save()
         else:
-            latin_square = LatinSquare.objects.create(experiment=experiment)
-            GenerateLatinSquareRows(latin_square).call()
+            latin_square = LatinSquare.objects.create_with_rows(experiment=experiment)
             latin_square.row1.participant = participant
             latin_square.row1.save()
 
