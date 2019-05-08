@@ -15,7 +15,7 @@ class NextTask(TemplateView):
         experiment = self.__get_experiment(kwargs['experiment_id'])
         participant = self.__get_participant(kwargs['participant_id'])
 
-        participant.finish_all_pauses()
+        participant.finish_last_pause_for_each_execution()
 
         if 'previous_execution_id' in self.request.GET:
             execution = Execution.objects.get(pk=self.request.GET.get('previous_execution_id'))

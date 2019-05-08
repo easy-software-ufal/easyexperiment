@@ -1,0 +1,33 @@
+,Replica,Id,Student,SetOfTasks,Tasks,Technique,Trials,Time,Minutes
+1,41,1,paulo,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,14.0,14.0
+1,41,1,paulo,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,19.0,19.0
+1,41,2,Romário,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,27.0,27.0
+1,41,2,Romário,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,22.0,22.0
+2,42,1,Igor,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,18.0,18.0
+2,42,1,Igor,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,40.0,40.0
+2,42,2,Hyago,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,20.0,20.0
+2,42,2,Hyago,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,32.0,32.0
+3,43,1,,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,19.0,19.0
+3,43,1,,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,53.0,53.0
+3,43,2,,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,21.0,21.0
+3,43,2,,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,20.0,20.0
+4,44,1,,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,9.0,9.0
+4,44,1,,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,25.0,25.0
+4,44,2,,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,17.0,17.0
+4,44,2,,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,30.0,30.0
+5,45,1,Matheus Costa,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,27.0,27.0
+5,45,1,Matheus Costa,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,39.0,39.0
+5,45,2,Davi Jose,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,8.0,8.0
+5,45,2,Davi Jose,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,18.0,18.0
+6,46,1,Marlon Lúcio,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,35.0,35.0
+6,46,1,Marlon Lúcio,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,36.0,36.0
+6,46,2,Jackson Barbosa da Silva,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,13.0,13.0
+6,46,2,Jackson Barbosa da Silva,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,40.0,40.0
+7,47,1,Allan,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,19.0,19.0
+7,47,1,Allan,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,55.0,55.0
+7,47,2,Dielson Sales de Carvalho,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,22.0,22.0
+7,47,2,Dielson Sales de Carvalho,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,25.0,25.0
+8,48,1,Thiago,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,16.0,16.0
+8,48,1,Thiago,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,15.0,15.0
+8,48,2,,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,27.0,27.0
+8,48,2,,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,78.0,78.0

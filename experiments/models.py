@@ -25,9 +25,19 @@ class Participant(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def finish_all_pauses(self):
+    def finish_last_pause_for_each_execution(self):
         for execution in self.execution_set.all():
-            execution.pause_set.all().update(end_time=datetime.now())
+            last_pause = Pause.objects.filter(execution=execution).order_by('-pk')
+    
+            if len(last_pause) > 0:
+                last_pause = last_pause[0]
+                if last_pause.end_time is None:
+                    last_pause.end_time = datetime.now()
+                    last_pause.save()
+
+    #def finish_all_pauses(self):
+    #    for execution in self.execution_set.all():
+    #        execution.pause_set.all().update(end_time=datetime.now())
 
     def __unicode__(self):
         return self.name
@@ -68,13 +78,15 @@ class Execution(models.Model):
     number_of_errors = models.IntegerField(default=0)
 
     def duration_in_seconds(self):
-        pauses_duration = 0
-        for pause in self.pause_set.all():
-            pauses_duration += pause.duration_in_seconds()
+        # pauses_duration = 0
+        # for pause in self.pause_set.all():
+        #    pauses_duration += pause.duration_in_seconds()
 
-        execution_total_duration = self.end - self.start
+        # execution_total_duration = self.end - self.start
+        # return execution_total_duration.total_seconds() - pauses_duration
 
-        return execution_total_duration.total_seconds() - pauses_duration
+        duration_in_s = (self.end - self.start).total_seconds()
+        return divmod(duration_in_s, 60)[0] # return in minutes
 
 
 class Point(models.Model):

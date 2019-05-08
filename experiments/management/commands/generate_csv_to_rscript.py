@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+
+import csv
+from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Q
+from experiments.models import LatinSquare, Execution
+
+
+class Command(BaseCommand):
+    help = 'Generate a new CSV file to be used as dataset on rstudio script'
+
+    def handle(self, *args, **options):
+        latin_squares = LatinSquare.objects.filter(experiment_id=2) \
+                                           .exclude(Q(row1__participant_id__isnull=True) | Q(row2__participant_id__isnull=True))
+
+        with open('datasetatoms.csv', 'wb') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            filewriter.writerow(["","Replica","Id","Student","SetOfTasks","Tasks","Technique","Trials","Time","Minutes"])
+
+            for index, latin_square in enumerate(latin_squares, start=1):
+                descriptions_row1_cell1 = [task.description for task in latin_square.row1.cell1.tasks.all()]
+                tasks_row1_cell1 = ':'.join(descriptions_row1_cell1)
+                descriptions_row1_cell2 = [task.description for task in latin_square.row1.cell2.tasks.all()]
+                tasks_row1_cell2 = ':'.join(descriptions_row1_cell2)
+
+                descriptions_row2_cell1 = [task.description for task in latin_square.row2.cell1.tasks.all()]
+                tasks_row2_cell1 = ':'.join(descriptions_row2_cell1)
+                descriptions_row2_cell2 = [task.description for task in latin_square.row2.cell2.tasks.all()]
+                tasks_row2_cell2 = ':'.join(descriptions_row2_cell2)
+
+                row1_cell1_type = ""
+                row1_cell2_type = ""
+                row2_cell1_type = ""
+                row2_cell2_type = ""
+
+                if latin_square.frame_sequence[:2] == [1,2]:
+                    row1_cell1_type = "With Atom"
+                    row1_cell2_type = "Without Atom"
+                    row2_cell1_type = "Without Atom"
+                    row2_cell2_type = "With Atom"
+                else:
+                    row1_cell1_type = "Without Atom"
+                    row1_cell2_type = "With Atom"
+                    row2_cell1_type = "With Atom"
+                    row2_cell2_type = "Without Atom"
+
+                duration_row1_cell_1 = self.duration_for_cell(latin_square.row1.cell1, latin_square.row1.participant)
+                duration_row1_cell_2 = self.duration_for_cell(latin_square.row1.cell2, latin_square.row1.participant)
+                duration_row2_cell_1 = self.duration_for_cell(latin_square.row2.cell1, latin_square.row2.participant)
+                duration_row2_cell_2 = self.duration_for_cell(latin_square.row2.cell2, latin_square.row2.participant)
+
+                # write lines to csv        
+                filewriter.writerow([index, latin_square.id, 1, latin_square.row1.participant.name.encode('utf-8'), "ST1", tasks_row1_cell1, row1_cell1_type, 1, duration_row1_cell_1, duration_row1_cell_1])
+                filewriter.writerow([index, latin_square.id, 1, latin_square.row1.participant.name.encode('utf-8'), "ST2", tasks_row1_cell2, row1_cell2_type, 1, duration_row1_cell_2, duration_row1_cell_2])
+                filewriter.writerow([index, latin_square.id, 2, latin_square.row2.participant.name.encode('utf-8'), "ST1", tasks_row2_cell1, row2_cell1_type, 1, duration_row2_cell_1, duration_row2_cell_1])
+                filewriter.writerow([index, latin_square.id, 2, latin_square.row2.participant.name.encode('utf-8'), "ST2", tasks_row2_cell2, row2_cell2_type, 1, duration_row2_cell_2, duration_row2_cell_2])
+
+    def duration_for_cell(self, cell, participant):
+        total_duration = 0
+
+        for task in cell.tasks.all():
+            execution = Execution.objects.get(task=task, participant=participant)
+            total_duration += execution.duration_in_seconds()
+        
+        return total_duration

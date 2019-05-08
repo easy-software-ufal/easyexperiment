@@ -13,7 +13,7 @@ def date_handler(obj):
         raise TypeError
 
 class ResumeExecution(View):
-    template_name= None
+    template_name = None
     def post(self, request, *args, **kwargs):
         pause = self.get_last_pause_for_execution(int(kwargs['execution_id']))
         pause.end_time = datetime.now()

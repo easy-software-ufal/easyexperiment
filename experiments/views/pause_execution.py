@@ -19,7 +19,7 @@ class PauseExecution(TemplateView):
     def get(self, request, *args, **kwargs):
         # finish previous pauses, this is needed in case of user refresh the screen
         execution = Execution.objects.get(pk=kwargs['execution_id'])
-        execution.participant.finish_all_pauses()
+        execution.participant.finish_last_pause_for_each_execution()
 
         return super(PauseExecution, self).get(request, args, kwargs)
 

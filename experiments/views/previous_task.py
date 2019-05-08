@@ -15,7 +15,7 @@ class PreviousTask(TemplateView):
     def get(self, request, *args, **kwargs):
         participant = self.__get_participant(kwargs['participant_id'])
 
-        participant.finish_all_pauses()
+        participant.finish_last_pause_for_each_execution()
 
         self.execution = participant.execution_set.all().latest('created_at')
 
