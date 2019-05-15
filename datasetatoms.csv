@@ -31,3 +31,31 @@
 8,48,1,Thiago,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,15.0,15.0
 8,48,2,,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,27.0,27.0
 8,48,2,,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,78.0,78.0
+9,49,1,Rodrigo Lima,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,41.0,41.0
+9,49,1,Rodrigo Lima,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,29.0,29.0
+9,49,2,Jardel Costa,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,11.0,11.0
+9,49,2,Jardel Costa,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,21.0,21.0
+10,50,1,Felipe Pontes,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,24.0,24.0
+10,50,1,Felipe Pontes,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,20.0,20.0
+10,50,2,Jairo Souza,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,22.0,22.0
+10,50,2,Jairo Souza,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,37.0,37.0
+11,51,1,julios,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,28.0,28.0
+11,51,1,julios,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,39.0,39.0
+11,51,2,Romero Malaquias,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,15.0,15.0
+11,51,2,Romero Malaquias,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,25.0,25.0
+12,53,1,Bruno Georgevich Ferreira,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,16.0,16.0
+12,53,1,Bruno Georgevich Ferreira,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,15.0,15.0
+12,53,2,jadson,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,11.0,11.0
+12,53,2,jadson,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,45.0,45.0
+13,55,1,,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,31.0,31.0
+13,55,1,,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,21.0,21.0
+13,55,2,Arthur,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,13.0,13.0
+13,55,2,Arthur,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,63.0,63.0
+14,52,1,,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,33.0,33.0
+14,52,1,,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,43.0,43.0
+14,52,2,vinicius lopes,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,19.0,19.0
+14,52,2,vinicius lopes,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,64.0,64.0
+15,54,1,Thiago Tenorio,ST1,AV1.2:CO1.2:DE1.2,Without Atom,1,35.0,35.0
+15,54,1,Thiago Tenorio,ST2,AV2.1:CO2.1:DE2.1,With Atom,1,37.0,37.0
+15,54,2,Joao Victor Ribeiro Ferro,ST1,AV1.1:CO1.1:DE1.1,With Atom,1,35.0,35.0
+15,54,2,Joao Victor Ribeiro Ferro,ST2,AV2.2:CO2.2:DE2.2,Without Atom,1,27.0,27.0

@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from experiments.managers.latin_square_manager import LatinSquareManager
+from experiments.managers.pause_manager import PauseManager
 
 
 class Experiment(models.Model):
@@ -77,15 +78,24 @@ class Execution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     number_of_errors = models.IntegerField(default=0)
 
+    def pauses_duration(self):
+        pauses_duration = 0
+        for pause in self.pause_set.all():
+            pauses_duration += pause.duration_in_seconds()
+
+        return pauses_duration
+
+    def execution_total_duration(self):
+        if self.end is None or self.start is None:
+            return 0
+
+        return (self.end - self.start).total_seconds()
+
     def duration_in_seconds(self):
-        # pauses_duration = 0
-        # for pause in self.pause_set.all():
-        #    pauses_duration += pause.duration_in_seconds()
+        duration_in_s = self.execution_total_duration() - self.pauses_duration()
+        
+        # duration_in_s = (self.end - self.start).total_seconds()
 
-        # execution_total_duration = self.end - self.start
-        # return execution_total_duration.total_seconds() - pauses_duration
-
-        duration_in_s = (self.end - self.start).total_seconds()
         return divmod(duration_in_s, 60)[0] # return in minutes
 
 
@@ -133,7 +143,12 @@ class Pause(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
 
+    objects = PauseManager()
+
     def duration_in_seconds(self):
+        if self.end_time is None or self.start_time is None:
+            return 0
+
         duration = self.end_time - self.start_time
 
         return duration.total_seconds()
