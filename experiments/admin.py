@@ -33,6 +33,7 @@ class ExperimentAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at',)
     list_display = ('description', 'created_at', 'updated_at')
 
+
 class TaskAdmin(admin.ModelAdmin):
     inlines = [ExecutionInline,]
     list_filter = ('created_at', 'experiment',)
@@ -47,6 +48,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at',)
     list_display = ('name', 'email', 'created_at', 'updated_at')
 
+
 class ExecutionAdmin(admin.ModelAdmin):
     list_filter = ('participant', 'task', 'start', 'end', 'created_at', 'updated_at',)
     readonly_fields = ('start', 'end', 'created_at', 'updated_at',)
@@ -57,6 +59,7 @@ class PointAdmin(admin.ModelAdmin):
     readonly_fields = ('x', 'y', 'datetime',)
     list_display = ('x', 'y', 'datetime',)
     list_filter = ('datetime',)
+
 
 class LatinSquareAdmin(admin.ModelAdmin):
     list_filter = ('experiment', 'row1', 'row2',)
