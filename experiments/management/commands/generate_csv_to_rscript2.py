@@ -29,18 +29,7 @@ class Command(BaseCommand):
 
                 set_of_tasks = "ST1" if execution.task.frame in [1,3] else "ST2"
 
-                if execution.task.description.startswith("AV1"):
-                    tasks = 1
-                elif execution.task.description.startswith("CO1"):
-                    tasks = 2
-                elif execution.task.description.startswith("DE1"):
-                    tasks = 3
-                elif execution.task.description.startswith("AV2"):
-                    tasks = 4
-                elif execution.task.description.startswith("CO2"):
-                    tasks = 5
-                else:
-                    tasks = 6
+                tasks = execution.task.description[:3]
 
                 if execution.task.description.endswith(".1"):
                     technique = "With Atom"
@@ -51,7 +40,7 @@ class Command(BaseCommand):
                     [
                         index,
                         latin_square.id,
-                        execution.participant_id,# idline,
+                        idline,
                         execution.participant.name.encode('utf-8'),
                         set_of_tasks,
                         tasks,
