@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -29,14 +29,14 @@ class Participant(models.Model):
     def finish_last_pause_for_each_execution(self):
         for execution in self.execution_set.all():
             last_pause = Pause.objects.filter(execution=execution).order_by('-pk')
-    
+
             if len(last_pause) > 0:
                 last_pause = last_pause[0]
                 if last_pause.end_time is None:
                     last_pause.end_time = datetime.now()
                     last_pause.save()
 
-    #def finish_all_pauses(self):
+    # def finish_all_pauses(self):
     #    for execution in self.execution_set.all():
     #        execution.pause_set.all().update(end_time=datetime.now())
 
@@ -91,13 +91,13 @@ class Execution(models.Model):
 
         return (self.end - self.start).total_seconds()
 
-    def duration_in_seconds(self):
+    def duration_in_minutes(self):
         duration_in_s = self.execution_total_duration() - self.pauses_duration()
-        
+
         # duration_in_s = (self.end - self.start).total_seconds()
 
-        return divmod(duration_in_s, 60)[0] # return in minutes
-
+        # return divmod(duration_in_s, 60)[0]  # return in minutes
+        return duration_in_s / 60
 
 class Point(models.Model):
     x = models.CharField(max_length=200)
@@ -117,8 +117,8 @@ class LatinSquareRow(models.Model):
                               related_name='first_cell')
     cell2 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True,
                               related_name='second_cell')
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True,
-                                    related_name='row_participant')
+    participant = models.OneToOneField(Participant, on_delete=models.CASCADE, blank=True, null=True,
+                                       related_name='row_participant')
 
     def __unicode__(self):
         return "%d" % self.id
@@ -126,10 +126,10 @@ class LatinSquareRow(models.Model):
 
 class LatinSquare(models.Model):
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
-    row1 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
-                             related_name='row1_latin_square')
-    row2 = models.ForeignKey(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
-                             related_name='row2_latin_square')
+    row1 = models.OneToOneField(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
+                                related_name='row1_latin_square')
+    row2 = models.OneToOneField(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
+                                related_name='row2_latin_square')
     frame_sequence = ArrayField(models.IntegerField(), null=True, blank=True, default=[1, 2, 3, 4])
 
     objects = LatinSquareManager()
