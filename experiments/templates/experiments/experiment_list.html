@@ -1,11 +1,18 @@
-<h1>Experiments</h1>
-<ul>
-{% for experiment in object_list %}
-    <li>
-        <a href="{% url 'experiments:start_flow' experiment.id %}">{{ experiment.created_at }} - {{ experiment.description }}
-        </a>
-    </li>
-{% empty %}
-    <li>No experiments yet.</li>
-{% endfor %}
-</ul>
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h2>Experiments</h2>
+        <hr>
+        <ul class="list-group">
+        {% for experiment in object_list %}
+            <li class="list-group-item">
+                <a href="{% url 'experiments:start_flow' experiment.id %}">{{ experiment.description|upper }}
+                </a>
+            </li>
+        {% empty %}
+            <li>No experiments yet.</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

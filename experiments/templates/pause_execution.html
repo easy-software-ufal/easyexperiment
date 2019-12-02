@@ -3,7 +3,9 @@
 {% block title %}Tarefa Pausada{% endblock %}
 
 {% block content %}
-    <h1>Tarefa Pausada</h1>
+<div class="jumbotron">
+    <h2>Tarefa Pausada</h2>
+    <hr>
     <div>
         <a id="navigationButton"
            href="{% url 'experiments:previous_task' pause.execution.participant.id pause.execution.task.experiment.id %}"
@@ -38,6 +40,7 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
@@ -63,7 +66,7 @@
 
                     if (result.correct) {
                         alert('Resposta correta!');
-                        changeNavigationButtonToNextTask();
+                        gotoHeatMap();
                         hideResponseButton();
                     } else {
                         alert('Resposta incorreta!')
@@ -71,6 +74,10 @@
                     }
                 }
             );
+        }
+
+        function gotoHeatMap() {
+            window.location.replace("{% url 'experiments:heat_map' pause.execution.id %}");
         }
 
         function changeNavigationButtonToNextTask() {

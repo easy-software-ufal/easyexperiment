@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -10,25 +10,32 @@ from experiments.managers.latin_square_manager import LatinSquareManager
 from experiments.managers.pause_manager import PauseManager
 
 
-class Experiment(models.Model):
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class Experiment(BaseModel):
     description = models.CharField(max_length=200)
-    tasks_quantity_by_cell = models.IntegerField(default=1, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    tasks_quantity_by_cell = models.IntegerField(
+        default=1, blank=True, null=True
+    )
 
     def __unicode__(self):
         return self.description
 
 
-class Participant(models.Model):
+class Participant(BaseModel):
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def finish_last_pause_for_each_execution(self):
         for execution in self.execution_set.all():
-            last_pause = Pause.objects.filter(execution=execution).order_by('-pk')
+            last_pause = Pause.objects.filter(execution=execution) \
+                              .order_by('-pk')
 
             if len(last_pause) > 0:
                 last_pause = last_pause[0]
@@ -44,7 +51,7 @@ class Participant(models.Model):
         return self.name
 
 
-class Task(models.Model):
+class Task(BaseModel):
     FIRST_FRAME = 1
     SECOND_FRAME = 2
     THIRD_FRAME = 3
@@ -59,24 +66,32 @@ class Task(models.Model):
 
     description = models.CharField(max_length=200)
     image = models.ImageField(upload_to='uploads/tasks')
-    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
+    experiment = models.ForeignKey(
+        Experiment, on_delete=models.CASCADE, blank=True, null=True
+    )
     frame = models.IntegerField(choices=FRAME_CHOICES, blank=True, null=True)
     correct_answer = models.CharField(max_length=500, default='')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.description
 
 
-class Execution(models.Model):
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, blank=True, null=True)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True)
+def execution_plot_directory_path(instance, filename):
+    return 'uploads/executions/heatmaps/{0}/{1}'.format(instance.id, filename)
+
+
+class Execution(BaseModel):
+    participant = models.ForeignKey(
+        Participant, on_delete=models.CASCADE, blank=True, null=True
+    )
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, blank=True, null=True
+    )
     start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     number_of_errors = models.IntegerField(default=0)
+    heatmap = models.ImageField(upload_to=execution_plot_directory_path,
+                                blank=True, null=True, max_length=500)
 
     def pauses_duration(self):
         pauses_duration = 0
@@ -99,38 +114,53 @@ class Execution(models.Model):
         # return divmod(duration_in_s, 60)[0]  # return in minutes
         return duration_in_s / 60
 
-class Point(models.Model):
+
+class Point(BaseModel):
     x = models.CharField(max_length=200)
     y = models.CharField(max_length=200)
     datetime = models.DateTimeField(null=True, blank=True)
 
 
-class LatinSquareCell(models.Model):
+class LatinSquareCell(BaseModel):
     tasks = models.ManyToManyField(Task)
 
     def __unicode__(self):
         return "%d" % self.id
 
 
-class LatinSquareRow(models.Model):
-    cell1 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True,
-                              related_name='first_cell')
-    cell2 = models.ForeignKey(LatinSquareCell, on_delete=models.CASCADE, blank=True, null=True,
-                              related_name='second_cell')
-    participant = models.OneToOneField(Participant, on_delete=models.CASCADE, blank=True, null=True,
-                                       related_name='row_participant')
+class LatinSquareRow(BaseModel):
+    cell1 = models.ForeignKey(
+        LatinSquareCell, on_delete=models.CASCADE,
+        blank=True, null=True, related_name='first_cell'
+    )
+    cell2 = models.ForeignKey(
+        LatinSquareCell, on_delete=models.CASCADE,
+        blank=True, null=True, related_name='second_cell'
+    )
+    participant = models.OneToOneField(
+        Participant, on_delete=models.CASCADE,
+        blank=True, null=True, related_name='row_participant'
+    )
 
     def __unicode__(self):
         return "%d" % self.id
 
 
-class LatinSquare(models.Model):
-    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, blank=True, null=True)
-    row1 = models.OneToOneField(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
-                                related_name='row1_latin_square')
-    row2 = models.OneToOneField(LatinSquareRow, on_delete=models.CASCADE, blank=True, null=True,
-                                related_name='row2_latin_square')
-    frame_sequence = ArrayField(models.IntegerField(), null=True, blank=True, default=[1, 2, 3, 4])
+class LatinSquare(BaseModel):
+    experiment = models.ForeignKey(
+        Experiment, on_delete=models.CASCADE, blank=True, null=True
+    )
+    row1 = models.OneToOneField(
+        LatinSquareRow, on_delete=models.CASCADE,
+        blank=True, null=True, related_name='row1_latin_square'
+    )
+    row2 = models.OneToOneField(
+        LatinSquareRow, on_delete=models.CASCADE,
+        blank=True, null=True, related_name='row2_latin_square'
+    )
+    frame_sequence = ArrayField(
+        models.IntegerField(), null=True, blank=True, default=[1, 2, 3, 4]
+    )
 
     objects = LatinSquareManager()
 
@@ -138,8 +168,10 @@ class LatinSquare(models.Model):
         return "%d" % self.id
 
 
-class Pause(models.Model):
-    execution = models.ForeignKey(Execution, on_delete=models.CASCADE, blank=True, null=True)
+class Pause(BaseModel):
+    execution = models.ForeignKey(
+        Execution, on_delete=models.CASCADE, blank=True, null=True
+    )
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
 
@@ -157,10 +189,39 @@ class Pause(models.Model):
         return "%d %d" % (self.id, self.duration_in_seconds())
 
 
-class Answer(models.Model):
+class Answer(BaseModel):
     execution = models.ForeignKey(Execution, on_delete=models.CASCADE)
     answer = models.CharField(max_length=500)
     correct = models.BooleanField()
+
+
+class HeatMapFeedback(BaseModel):
+    execution = models.ForeignKey('Execution', on_delete=models.CASCADE)
+    corresponds_to_perception = models.BooleanField(default=True)
+    notes = models.CharField(max_length=500)
+
+
+class Survey(BaseModel):
+    description = models.CharField(max_length=200)
+    experiment = models.ForeignKey('Experiment', on_delete=models.CASCADE)
+
+
+class SurveyQuestion(BaseModel):
+    INPUT_TYPE_CHOICES = (
+        ('text', 'Text'),
+        ('textarea', 'Text Area')
+    )
+
+    question = models.CharField(max_length=200)
+    input_type = models.CharField(max_length=20, choices=INPUT_TYPE_CHOICES)
+    survey = models.ForeignKey('Survey', on_delete=models.CASCADE)
+
+
+class SurveyAnswer(BaseModel):
+    question = models.ForeignKey('SurveyQuestion', on_delete=models.CASCADE)
+    execution = models.ForeignKey('Execution', on_delete=models.CASCADE)
+    answer = models.CharField(max_length=500)
+
 
 # from django.db.models.signals import post_save
 #

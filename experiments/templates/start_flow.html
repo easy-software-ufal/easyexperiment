@@ -3,15 +3,16 @@
 {% block title %}Criar Participante{% endblock %}
 
 {% block content %}
-<h1 class="display-3">Por favor informe o seu nome e email:</h1>
-<hr>
+<div class="jumbotron">
+    <h2 class="display-3">Por favor informe o seu nome e email:</h2>
+    <hr>
 
-<p>Todos os campos são opcionais</p>
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Iniciar">
-</form>
-
+    <p>Todos os campos são opcionais</p>
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-primary" value="Iniciar">
+    </form>
+</div>
 {% endblock %}
 
 {% block javascript %}

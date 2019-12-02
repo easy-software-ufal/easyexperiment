@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Heat Map{% endblock %}
+
+{% block content %}
+<style>
+    form {
+        background-color: #DFDFDF;
+        padding: 10px;
+    }
+</style>
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-sm-9" style="height: 100%">
+            <img src="{{ execution_heatmap_url }}"  style="width: 100%; object-fit: contain; top: 0; position: relative; di">
+        </div>
+        <div class="col-sm-3">
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form.execution_id }}
+
+                {% for field in form.visible_fields %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {% render_field field class="form-control" %}
+                    {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                </table>
+
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
