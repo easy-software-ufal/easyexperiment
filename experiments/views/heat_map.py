@@ -1,6 +1,11 @@
 from django.views.generic.edit import FormView
 from experiments.forms import HeatMapFeedbackForm
 from experiments.models import Execution, Point
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 from pygazeanalyser.gazeplotter import draw_heatmap
 
 import numpy
@@ -21,7 +26,7 @@ if not os.path.isdir(PLOTDIR):
     os.mkdir(PLOTDIR)
 
 # EXPERIMENT SPECS
-DISPSIZE = (1440, 900)  # (px,px)
+DISPSIZE = (1920, 1080)  # (px,px)
 SCREENSIZE = (39.9,29.9) # (cm,cm)
 SCREENDIST = 61.0 # cm
 PXPERCM = numpy.mean([DISPSIZE[0]/SCREENSIZE[0], DISPSIZE[1]/SCREENSIZE[1]])  # px/cm
@@ -44,10 +49,11 @@ class HeatMap(FormView):
         initial['execution_id'] = self.kwargs['execution_id']
         # execution = self.__execution(245)
         execution = self.__execution(self.kwargs['execution_id'])
-        self.__generate_heat_map(execution)
+
+        if not execution.heatmap:
+            self.__generate_heat_map(execution)
 
         return initial
-
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -58,7 +64,6 @@ class HeatMap(FormView):
         context['execution_heatmap_url'] = execution.heatmap.url
 
         return context
-
 
     def __generate_heat_map(self, execution):
         background_image = DIR + "/../.." + execution.task.image.url
@@ -104,6 +109,7 @@ class HeatMap(FormView):
         execution.heatmap = 'uploads/executions/heatmaps/{0}/heatmap.png'.format(execution.id)
         print execution.heatmap
         execution.save()
+        return execution.heatmap.url
 
     def __execution(self, execution_id):
         return Execution.objects.get(pk=execution_id)
@@ -117,4 +123,3 @@ class HeatMap(FormView):
         self.success_url += '%d/%d/?previous_execution_id=%s' % (
             participant.id, experiment.id, heat_map_feedback.execution.id)
         return super(HeatMap, self).form_valid(form)
-
