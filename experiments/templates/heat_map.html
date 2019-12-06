@@ -13,7 +13,7 @@
 <div class="jumbotron">
     <div class="row">
         <div class="col-sm-9" style="height: 100%">
-            <img src="{{ execution_heatmap_url }}"  style="width: 100%; object-fit: contain; top: 0; position: relative; di">
+            <img src="{{ execution_heatmap_url }}"  style="width: 100%; object-fit: contain; top: 0; position: relative;">
         </div>
         <div class="col-sm-3">
             <form method="post">
@@ -21,17 +21,15 @@
 
                 {{ form.execution_id }}
 
-                {% for field in form.visible_fields %}
                 <div class="form-group">
-                    {{ field.label_tag }}
-                    {% render_field field class="form-control" %}
-                    {% if field.help_text %}
-                    <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
+                    {{ form.corresponds_to_perception.label_tag }}
+                    Sim: {{ form.corresponds_to_perception }}
                 </div>
-                {% endfor %}
-                </table>
 
+                <div class="form-group">
+                    {{ form.notes.label_tag }}
+                    {{ form.notes }}
+                </div>
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
         </div>

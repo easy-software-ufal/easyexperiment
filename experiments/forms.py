@@ -51,11 +51,15 @@ class HeatMapFeedbackForm(forms.Form):
     execution_id = forms.IntegerField(
         widget=forms.HiddenInput(), required=True)
     corresponds_to_perception = forms.BooleanField(
-        label='Na sua percepção o gráfico ao lado corresponde a realidade?',
-        initial=True, required=False)
+        label='O gráfico ao lado exibe as áreas da função para onde você precisou olhar com mais frequência para entender o código. Você concorda com ele?',
+        initial=False, required=False)
     notes = forms.CharField(
         label='Gostaria de deixar algum comentário?',
         max_length=500, widget=forms.Textarea, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(HeatMapFeedbackForm, self).__init__(*args, **kwargs)
+        self.fields['notes'].widget.attrs['class'] = 'form-control'
 
     def save_heat_map_feedback(self):
         corresponds_to_perception = self.cleaned_data[
