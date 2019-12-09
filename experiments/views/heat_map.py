@@ -49,8 +49,10 @@ class HeatMap(FormView):
         initial['execution_id'] = self.kwargs['execution_id']
         # execution = self.__execution(245)
         execution = self.__execution(self.kwargs['execution_id'])
-        execution.end = datetime.now()
-        execution.save()
+
+        if not execution.end:
+            execution.end = datetime.now()
+            execution.save()
 
         if not execution.heatmap:
             self.__generate_heat_map(execution)
