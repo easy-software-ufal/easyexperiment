@@ -30,7 +30,7 @@ class SubmitAnswer(View):
         execution = self.__execution()
         correct = execution.task.correct_answer == user_answer.strip()
         execution_id = self.__execution_id()
-        if not correct: self.increment_number_of_errors(execution_id)
+        if not correct: self.increment_number_of_errors()
 
         return Answer.objects.create(execution_id=execution_id, answer=user_answer, correct=correct)
 
