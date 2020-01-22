@@ -11,11 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         executions = Execution.objects\
-                        .filter(task__experiment_id=2)\
+                        .filter(task__experiment_id=3)\
                         .exclude(participant_id=18).order_by('-id') # O eye tracker não funcionou na aplicação da Lettícia
 
 
-        with open('/Users/fernandooliveira/workspaces/mestrado/Experimento/masters_experiment_analysis/datasetatoms3.csv', 'wb') as csvfile:
+        with open('C:/Users/nando/workspaces/ufal/Atoms-of-Confusion-Experiment-Analysis/pilot2-data.csv', 'wb') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             filewriter.writerow(["", "Replica", "Id", "Student", "SetOfTasks", "Tasks", "Technique", "Trials", "Time", "Minutes"])
 
@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
                 set_of_tasks = "ST1" if execution.task.frame in [1,3] else "ST2"
 
-                tasks = execution.task.description[:3]
+                tasks = execution.task.description.split('.')[0]
 
                 if execution.task.description.endswith(".1"):
                     technique = "With Atom"
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                         tasks,
                         technique,
                         execution.answer_set.all().count(),
-                        int(execution.duration_in_minutes() * 60000),
+                        int(execution.duration_in_seconds() * 60000),
                         execution.duration_in_minutes()
                     ]
                 )

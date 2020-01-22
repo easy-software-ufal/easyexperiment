@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import csv
+
 from django.core.management.base import BaseCommand
 from django.db.models import Q
+
 from experiments.models import LatinSquare, Execution
 
 
@@ -10,10 +12,10 @@ class Command(BaseCommand):
     help = 'Generate a new CSV file to be used as dataset on rstudio script'
 
     def handle(self, *args, **options):
-        latin_squares = LatinSquare.objects.filter(experiment_id=2) \
+        latin_squares = LatinSquare.objects.filter(experiment_id=3) \
                                            .exclude(Q(row1__participant_id__isnull=True) | Q(row2__participant_id__isnull=True))
 
-        with open('C:/Users/nando/OneDrive/Documentos/datasetatoms.csv', 'wb') as csvfile:
+        with open('C:/Users/nando/OneDrive/Documentos/datasetatoms_v2.csv', 'wb') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             filewriter.writerow(["", "Replica", "Id", "Student", "SetOfTasks", "Tasks", "Technique", "Trials", "Time", "Minutes"])
 
@@ -44,6 +46,7 @@ class Command(BaseCommand):
                     row2_cell1_type = "With Atom"
                     row2_cell2_type = "Without Atom"
 
+                # import code; code.interact(local=dict(globals(), **locals()))
                 duration_row1_cell_1 = self.duration_for_cell(latin_square.row1.cell1, latin_square.row1.participant)
                 duration_row1_cell_2 = self.duration_for_cell(latin_square.row1.cell2, latin_square.row1.participant)
                 duration_row2_cell_1 = self.duration_for_cell(latin_square.row2.cell1, latin_square.row2.participant)
@@ -63,7 +66,10 @@ class Command(BaseCommand):
     def executions_for_cell_and_participant(self, cell, participant):
         executions = []
         for task in cell.tasks.all():
-            executions.append(Execution.objects.get(task=task, participant=participant))
+            try:
+                executions.append(Execution.objects.get(task=task, participant=participant))
+            except:
+                print "Não encontrou execution com a task {} e o participante {}".format(task.id, participant.id)
 
         return executions
 

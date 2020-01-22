@@ -106,8 +106,11 @@ class Execution(BaseModel):
 
         return (self.end - self.start).total_seconds()
 
+    def duration_in_seconds(self):
+        return self.execution_total_duration() - self.pauses_duration()
+
     def duration_in_minutes(self):
-        duration_in_s = self.execution_total_duration() - self.pauses_duration()
+        duration_in_s = self.duration_in_seconds()
 
         # duration_in_s = (self.end - self.start).total_seconds()
 
