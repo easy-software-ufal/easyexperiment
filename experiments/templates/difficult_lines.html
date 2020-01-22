@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Trechos Difíceis{% endblock %}
+
+{% block content %}
+    <h2 class="display-3">Trechos de difícil compreensão</h2>
+    <hr>
+    <form method="post">{% csrf_token %}
+        <input type="hidden" id="execution_id" name="execution_id" value="{{ execution.id }}" />
+
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <img src="{{ execution.task.image.url }}" style="height: 90%; object-fit: contain; top: 0;" />
+            </div>
+            <div class="col-sm-2">
+                <label for="{{ form.hard_lines.id_for_label }}">Por favor, informe abaixo que linha(s) de código você acha mais complexa(s).</label>
+
+                {{ form.hard_lines }}
+
+                <hr>
+
+                <input type="submit" class="btn btn-primary" value="Enviar">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

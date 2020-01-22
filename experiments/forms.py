@@ -3,7 +3,7 @@
 from django import forms
 
 from experiments.models import Execution, Experiment, HeatMapFeedback,\
-    LatinSquare, Participant
+    LatinSquare, Participant, SocialRepresentation, DifficultLinesFeedback
 from experiments.services.search_available_latin_square_row import \
     SearchAvailableLatinSquareRow
 
@@ -28,7 +28,7 @@ class ParticipantForm(forms.Form):
         experiment_id = self.cleaned_data['experiment_id']
         experiment = self.__experiment(experiment_id)
 
-        participant = Participant.objects.create(name=name, email=email)
+        participant = Participant.objects.create(name=name, email=email, experiment=experiment)
 
         latin_square_row = SearchAvailableLatinSquareRow(experiment).call()
 
@@ -77,3 +77,49 @@ class HeatMapFeedbackForm(forms.Form):
 
     def __execution(self, execution_id):
         return Execution.objects.get(pk=execution_id)
+
+
+class DifficultLinesFeedbackForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DifficultLinesFeedbackForm, self).__init__(*args, **kwargs)
+        self.fields['hard_lines'].widget.attrs['class'] = 'form-control'
+
+    def save_difficult_lines_feedback(self):
+        hard_lines = self.cleaned_data['hard_lines']
+        execution_id = self.data['execution_id']
+        return DifficultLinesFeedback.objects.create(
+            hard_lines=hard_lines,
+            execution_id=execution_id
+        )
+
+    class Meta:
+        model = DifficultLinesFeedback
+        fields = ['hard_lines']
+
+
+
+class SocialRepresentationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SocialRepresentationForm, self).__init__(*args, **kwargs)
+        self.fields['words'].widget.attrs['class'] = 'form-control'
+        self.fields['most_relevant'].widget.attrs['class'] = 'form-control'
+
+
+    class Meta:
+        model = SocialRepresentation
+        fields = ['words', 'most_relevant']
+
+    def save_social_representation(self):
+        words = self.cleaned_data['words']
+        most_relevant = self.cleaned_data['most_relevant']
+        participant_id = self.data['participant_id']
+        participant = self.__participant(participant_id)
+
+        return SocialRepresentation.objects.create(
+            words = words,
+            most_relevant = most_relevant,
+            participant = participant
+        )
+
+    def __participant(self, participant_id):
+        return Participant.objects.get(pk=participant_id)

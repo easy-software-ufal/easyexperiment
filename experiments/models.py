@@ -23,12 +23,14 @@ class Experiment(BaseModel):
     tasks_quantity_by_cell = models.IntegerField(
         default=1, blank=True, null=True
     )
+    hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.description
 
 
 class Participant(BaseModel):
+    experiment = models.ForeignKey('Experiment', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
 
@@ -224,6 +226,29 @@ class SurveyAnswer(BaseModel):
     question = models.ForeignKey('SurveyQuestion', on_delete=models.CASCADE)
     execution = models.ForeignKey('Execution', on_delete=models.CASCADE)
     answer = models.CharField(max_length=500)
+
+
+class SocialRepresentation(BaseModel):
+    participant = models.ForeignKey('Participant', on_delete=models.CASCADE)
+    words = models.TextField(blank=True, null=True)
+    most_relevant = models.TextField(blank=True, null=True)
+
+
+# class ParticipantCharacterization(BaseModel):
+#     HIGHER_DEGREE_CHOICES = (
+#         ('graduation', 'Graduação'),
+#         ('master', 'Mestrado'),
+#         ('doctor', 'Doutorado')
+#     )
+#     participant = models.ForeignKey('Participant', on_delete=models.CASCADE)
+#     higher_degree = models.CharField(max_length=20, choices=HIGHER_DEGREE_CHOICES, null=True, blank=True)
+#     work_for_industry = models.TextField(blank=True, null=True)
+#     development_background_summary = models.TextField(blank=True, null=True)
+
+
+class DifficultLinesFeedback(BaseModel):
+    execution = models.ForeignKey('Execution', on_delete=models.CASCADE)
+    hard_lines = models.CharField(max_length=500, blank=True, null=True)
 
 
 # from django.db.models.signals import post_save

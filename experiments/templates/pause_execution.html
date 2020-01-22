@@ -90,7 +90,8 @@
                     if (result.correct) {
                         alert('Resposta correta!');
                         showLoader();
-                        gotoHeatMap();
+                        hideResponseButton();
+                        gotoNextTask();
                     } else {
                         alert('Resposta incorreta!')
                         $("#responseButton").html("Digite outra Resposta");
@@ -114,10 +115,15 @@
             window.location.replace("{% url 'experiments:heat_map' pause.execution.id %}");
         }
 
+        function gotoNextTask() {
+            window.location.replace("{% url 'experiments:next_task' pause.execution.participant.id %}?previous_execution_id={{ pause.execution.id }}");
+
+        }
+
         function changeNavigationButtonToNextTask() {
             var navigationButton = $("#navigationButton");
             $(navigationButton).html('Ir para a próxima tarefa');
-            $(navigationButton).attr('href', "{% url 'experiments:next_task' pause.execution.participant.id pause.execution.task.experiment.id %}?previous_execution_id={{ pause.execution.id }}");
+            $(navigationButton).attr('href', "{% url 'experiments:next_task' pause.execution.participant.id %}?previous_execution_id={{ pause.execution.id }}");
         }
 
         function hideResponseButton() {

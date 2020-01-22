@@ -38,10 +38,10 @@ class NextTaskService(object):
         LIMIT 1;
     """
 
-    def __init__(self, experiment, participant):
+    def __init__(self, participant):
         """Contructor"""
-        self.experiment = experiment
         self.participant = participant
+        self.experiment = participant.experiment
 
     def call(self):
         return self.__task()

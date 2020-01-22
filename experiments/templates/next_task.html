@@ -21,7 +21,7 @@
     <body>
         <img class="center-fit" src="{{ execution.task.image.url }}" alt="Image not found" />
 
-        <form action="/experiments/next-task/{{participant_id}}/{{experiment_id}}/" method="get">
+        <form action="/experiments/next-task/{{participant_id}}/" method="get">
             <input type="hidden" value="{{execution.id}}" name="previous_execution_id" />
             <button class="hide" id="next_task_button">
         </form>

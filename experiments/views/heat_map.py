@@ -39,7 +39,7 @@ def c_time():
 class HeatMap(FormView):
     template_name = 'heat_map.html'
     form_class = HeatMapFeedbackForm
-    success_url = '/experiments/next-task/'
+    success_url = '/experiments/heat-map/'
 
     def get_initial(self):
         """
@@ -119,12 +119,27 @@ class HeatMap(FormView):
     def __execution(self, execution_id):
         return Execution.objects.get(pk=execution_id)
 
+
+    def next_execution(self, execution):
+        participant_id = execution.participant.id
+
+        return Execution.objects.order_by('id').filter(
+            participant__id=participant_id,
+            id__gt=execution.id
+        ).first()
+
+
     def form_valid(self, form):
         heat_map_feedback = form.save_heat_map_feedback()
 
-        participant = heat_map_feedback.execution.participant
-        experiment = heat_map_feedback.execution.task.experiment
+        next_execution = self.next_execution(heat_map_feedback.execution)
 
-        self.success_url += '%d/%d/?previous_execution_id=%s' % (
-            participant.id, experiment.id, heat_map_feedback.execution.id)
+
+        if next_execution is None:
+            self.success_url = '/experiments/finish-execution/'
+        else:
+            self.success_url += "%d/" % next_execution.id
+
+        # self.success_url += '%d/%d/?previous_execution_id=%s' % (
+        #     participant.id, experiment.id, heat_map_feedback.execution.id)
         return super(HeatMap, self).form_valid(form)

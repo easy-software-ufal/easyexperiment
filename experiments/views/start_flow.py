@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class StartFlow(FormView):
     template_name = 'start_flow.html'
     form_class = ParticipantForm
-    success_url = '/experiments/next-task/'
+    success_url = '/experiments/social-representation/'
 
     def get_initial(self):
         """
@@ -23,16 +23,5 @@ class StartFlow(FormView):
 
     def form_valid(self, form):
         participant = form.save_participant()
-        experiment = self.__experiment_from_participant(participant)
-        self.success_url += '%d/%d/' % (participant.id, experiment.id)
+        self.success_url += '%d/' % participant.id
         return super(StartFlow, self).form_valid(form)
-
-    def __experiment_from_participant(self, participant):
-        latin_square_row = participant.row_participant
-
-        try:
-            latin_square = latin_square_row.row1_latin_square
-        except ObjectDoesNotExist:
-            latin_square = latin_square_row.row2_latin_square
-
-        return latin_square.experiment

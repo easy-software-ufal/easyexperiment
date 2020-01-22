@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Compreensão de Código{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h2 class="display-3">Compreensão de Código</h2>
+    <hr>
+    <form method="post">{% csrf_token %}
+        <input type="hidden" id="participant_id" name="participant_id" value="{{ participant_id }}" />
+
+        <div class="form-group">
+            <label for="{{ form.words.id_for_label }}">O que vem &lt;&lt;imediatamente&gt;&gt; à sua mente quando você pensa &lt;&lt;código fonte confuso&gt;&gt;? Por favor, informar até cinco palavras na ordem que elas vierem à sua mente.</label>
+            {{ form.words }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.most_relevant.id_for_label }}">Considerando as palavras que você informou, qual delas você considera a mais relevante para expressar sua percepção sobre o código-fonte confuso? Por quê?</label>
+            {{ form.most_relevant }}
+        </div>
+        <input type="submit" class="btn btn-primary" value="Iniciar">
+    </form>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}
