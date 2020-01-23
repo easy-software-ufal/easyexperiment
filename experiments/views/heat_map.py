@@ -76,6 +76,11 @@ class HeatMap(FormView):
             datetime__range=(execution.start, execution.end)
         )
 
+        # exclude pause points
+        for pause in execution.pause_set.all():
+            points = points.exclude(datetime__range=(pause.start_time, pause.end_time))
+
+
         # NEW OUTPUT DIRECTORIES
         # create a new output directory for the current participant
         pplotdir = os.path.join(PLOTDIR, str(execution.id))

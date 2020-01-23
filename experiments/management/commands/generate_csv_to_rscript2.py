@@ -11,11 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         executions = Execution.objects\
-                        .filter(task__experiment_id=3)\
+                        .filter(task__experiment_id=4)\
                         .exclude(participant_id=18).order_by('-id') # O eye tracker não funcionou na aplicação da Lettícia
 
 
-        with open('C:/Users/nando/workspaces/ufal/Atoms-of-Confusion-Experiment-Analysis/pilot2-data.csv', 'wb') as csvfile:
+        with open('C:/Users/nando/workspaces/ufal/Atoms-of-Confusion-Experiment-Analysis/pucv1-data.csv', 'wb') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             filewriter.writerow(["", "Replica", "Id", "Student", "SetOfTasks", "Tasks", "Technique", "Trials", "Time", "Minutes"])
 
