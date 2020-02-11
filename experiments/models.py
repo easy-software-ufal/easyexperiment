@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from datetime import datetime
 
 from django.contrib.postgres.fields import ArrayField
@@ -73,6 +71,9 @@ class Task(BaseModel):
     )
     frame = models.IntegerField(choices=FRAME_CHOICES, blank=True, null=True)
     correct_answer = models.CharField(max_length=500, default='')
+    area_of_interest_image = models.ImageField(upload_to='uploads/tasks/areas_of_interest', blank=True, null=True)
+    area_of_interest_points = ArrayField(models.IntegerField(), blank=True, null=True)
+
 
     def __unicode__(self):
         return self.description

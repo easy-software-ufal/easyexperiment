@@ -8,7 +8,7 @@ from experiments.models import Participant, Experiment, Task, Execution, Point, 
 
 class TaskInline(admin.TabularInline):
     model = Task
-    extra = 1
+    extra = 0
 
 
 class ExperimentInline(admin.TabularInline):
