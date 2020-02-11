@@ -46,7 +46,7 @@ class Command(BaseCommand):
                         tasks,
                         technique,
                         execution.answer_set.all().count(),
-                        int(execution.duration_in_seconds() * 60000),
-                        execution.duration_in_minutes()
+                        int(execution.duration_in_seconds()) * 1000,
+                        execution.duration_in_seconds()
                     ]
                 )
