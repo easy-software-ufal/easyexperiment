@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand
-from experiments.models import Execution, Pause, Point, Task
+
+from experiments.models import Execution, Point, Task
 
 
 class Command(BaseCommand):

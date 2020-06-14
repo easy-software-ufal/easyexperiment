@@ -1,23 +1,25 @@
 # -*- coding: utf-8 -*-
 
 import csv
+
 from django.core.management.base import BaseCommand
-from django.db.models import Q
-from experiments.models import LatinSquare, Execution
+
+from experiments.models import Execution
 
 
 class Command(BaseCommand):
     help = 'Generate a new CSV file to be used as dataset on rstudio script'
 
     def handle(self, *args, **options):
-        executions = Execution.objects\
-                        .filter(task__experiment_id=4)\
-                        .exclude(participant_id=18).order_by('-id') # O eye tracker não funcionou na aplicação da Lettícia
+        executions = Execution.objects \
+            .filter(task__experiment_id=4) \
+            .exclude(participant_id=18).order_by('-id')  # O eye tracker não funcionou na aplicação da Lettícia
 
-
-        with open('C:/Users/nando/workspaces/ufal/Atoms-of-Confusion-Experiment-Analysis/pucv1-data.csv', 'wb') as csvfile:
+        with open('C:/Users/nando/workspaces/ufal/Atoms-of-Confusion-Experiment-Analysis/pucv1-data.csv',
+                  'wb') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow(["", "Replica", "Id", "Student", "SetOfTasks", "Tasks", "Technique", "Trials", "Time", "Minutes"])
+            filewriter.writerow(
+                ["", "Replica", "Id", "Student", "SetOfTasks", "Tasks", "Technique", "Trials", "Time", "Minutes"])
 
             for index, execution in enumerate(executions, start=1):
                 if hasattr(execution.participant.row_participant, 'row1_latin_square'):
@@ -27,7 +29,7 @@ class Command(BaseCommand):
                     latin_square = execution.participant.row_participant.row2_latin_square
                     idline = 2
 
-                set_of_tasks = "ST1" if execution.task.frame in [1,3] else "ST2"
+                set_of_tasks = "ST1" if execution.task.frame in [1, 3] else "ST2"
 
                 tasks = execution.task.description.split('.')[0]
 

@@ -1,6 +1,7 @@
 from django.views.generic.edit import FormView
+
 from experiments.forms import SocialRepresentationForm
-from experiments.models import SocialRepresentation
+
 
 class SocialRepresentationView(FormView):
     template_name = 'social_representation.html'
@@ -21,4 +22,3 @@ class SocialRepresentationView(FormView):
 
         self.success_url += '%d/' % participant.id
         return super(SocialRepresentationView, self).form_valid(form)
-

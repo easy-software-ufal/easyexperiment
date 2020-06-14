@@ -2,8 +2,8 @@
 """First screen of experiment flow"""
 
 from django.views.generic.edit import FormView
+
 from experiments.forms import ParticipantForm
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class StartFlow(FormView):

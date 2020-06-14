@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.views.generic.edit import FormView
+
 from experiments.forms import DifficultLinesFeedbackForm
 from experiments.models import Execution
+
 
 class DifficultLinesView(FormView):
     template_name = 'difficult_lines.html'
@@ -27,10 +29,8 @@ class DifficultLinesView(FormView):
             id__gt=execution.id
         ).first()
 
-
     def first_execution(self, participant):
         return Execution.objects.order_by('id').filter(participant__id=participant.id).first().id
-
 
     def form_valid(self, form):
         difficult_lines_feedback = form.save_difficult_lines_feedback()
@@ -43,4 +43,3 @@ class DifficultLinesView(FormView):
             self.success_url = "/experiments/difficult-lines/%d/" % next_execution.id
 
         return super(DifficultLinesView, self).form_valid(form)
-

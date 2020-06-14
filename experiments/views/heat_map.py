@@ -3,6 +3,7 @@ from experiments.forms import HeatMapFeedbackForm
 from experiments.models import Execution, Point
 
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -27,9 +28,9 @@ if not os.path.isdir(PLOTDIR):
 
 # EXPERIMENT SPECS
 DISPSIZE = (1920, 1080)  # (px,px)
-SCREENSIZE = (39.9,29.9) # (cm,cm)
-SCREENDIST = 61.0 # cm
-PXPERCM = numpy.mean([DISPSIZE[0]/SCREENSIZE[0], DISPSIZE[1]/SCREENSIZE[1]])  # px/cm
+SCREENSIZE = (39.9, 29.9)  # (cm,cm)
+SCREENDIST = 61.0  # cm
+PXPERCM = numpy.mean([DISPSIZE[0] / SCREENSIZE[0], DISPSIZE[1] / SCREENSIZE[1]])  # px/cm
 
 
 def c_time():
@@ -80,7 +81,6 @@ class HeatMap(FormView):
         for pause in execution.pause_set.all():
             points = points.exclude(datetime__range=(pause.start_time, pause.end_time))
 
-
         # NEW OUTPUT DIRECTORIES
         # create a new output directory for the current participant
         pplotdir = os.path.join(PLOTDIR, str(execution.id))
@@ -124,7 +124,6 @@ class HeatMap(FormView):
     def __execution(self, execution_id):
         return Execution.objects.get(pk=execution_id)
 
-
     def next_execution(self, execution):
         participant_id = execution.participant.id
 
@@ -133,12 +132,10 @@ class HeatMap(FormView):
             id__gt=execution.id
         ).first()
 
-
     def form_valid(self, form):
         heat_map_feedback = form.save_heat_map_feedback()
 
         next_execution = self.next_execution(heat_map_feedback.execution)
-
 
         if next_execution is None:
             self.success_url = '/experiments/finish-execution/'
