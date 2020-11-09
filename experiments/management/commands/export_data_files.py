@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
                 total_points += len(points)
 
-                to_float = lambda x: float(x.replace(',', '.'))
+                # to_float = lambda x: float(x.replace(',', '.'))
 
                 participant_id = execution.participant_id
                 task_description = execution.task.description
@@ -38,9 +38,8 @@ class Command(BaseCommand):
                     os.mkdir(file_path)
 
                 with open(os.path.join(file_path, "%s.csv" % task_description), 'w') as data_file:
-                    data_file.write('x,y,datetime\n')
+                    data_file.write('x,y,time\n')
                     for point in points:
-                        datetime = time.mktime(point.datetime.timetuple())
-                        data_file.write("%.2f,%.2f,%f\n" % (to_float(point.x), to_float(point.y), datetime,))
-
-
+                        # timestamp = time.mktime(point.datetime.timetuple())
+                        time = point.datetime.strftime('%H:%M:%S:%f')[:-3]
+                        data_file.write("%s,%s,%s\n" % (point.x.replace(',', '.'), point.y.replace(',', '.'), time,))
