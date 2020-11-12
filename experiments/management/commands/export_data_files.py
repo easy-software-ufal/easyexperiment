@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
             for execution in executions:
                 print "Load points for execution %d" % execution.id
-                points = Point.objects.filter(datetime__range=(execution.start, execution.end))
+                points = Point.objects.filter(datetime__range=(execution.start, execution.end)).order_by('created_at')
 
                 # exclude pause points
                 for pause in execution.pause_set.all():
