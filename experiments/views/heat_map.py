@@ -117,7 +117,7 @@ class HeatMap(FormView):
 
         # Save image path on execution
         execution.heatmap = 'uploads/executions/heatmaps/{0}/heatmap.png'.format(execution.id)
-        print execution.heatmap
+        print(execution.heatmap)
         execution.save()
         return execution.heatmap.url
 
